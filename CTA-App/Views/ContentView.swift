@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         TabView{
-            MapView()
+            F_MapView()
                 .tabItem{
                     Label("Map", systemImage: "Map")
                 }
@@ -19,6 +19,11 @@ struct ContentView: View {
                 .tabItem{
                     Label("Report", systemImage: "Map")
                 }
+            
+//            UpdatesPageList()
+//                .tabItem{
+//                    Label("Upates", systemImage: "Map")
+//                }
             
             
         }
