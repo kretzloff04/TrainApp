@@ -1,0 +1,39 @@
+[
+    {
+        "id": 0,
+        "title": "CPD releases images of suspects in robbery attempt on Red Line at 47th",
+        "line": "Red",
+        "station": "47th Street",
+        "locationCoordinate": {
+            "longitude": -87.63167572021484,
+            "latitude": 41.80903244018555
+        },
+        "description": "CHICAGO (CBS) -- Police are asking for help identifying three people who tried to rob a passenger on a CTA Red Line train earlier this month on the South Side.Detectives said, around 11:50 p.m. on Oct. 9, the three suspects approached the victim on board a train at the 47th Street station, displayed a knife, maced the victim, and tried to take their belongings.Police on Sunday released surveillance images of the three suspects, and asked anyone who recognizes them or has other information on the robbery attempt to contact mass transit detectives at 312-745-4447. ",
+        "imageName": "cta-robbers"
+    },
+    {
+        "id": 1,
+        "title": "Teen charged in armed robbery of woman at CTA Red Line station",
+        "line": "Red",
+        "station": "69th Street",
+        "locationCoordinate": {
+            "longitude": -87.6255035,
+            "latitude": 41.7688346
+        },
+        "description": "CHICAGO (CBS) — A teenage boy was charged in connection to an armed robbery at a CTA Red Line station last month. The 14-year-old boy was charged with one felony count of armed robbery. Chicago police said the teen was arrested by officers and the Mass Transit Tactical Team on Friday in the 5100 block of South Wentworth Avenue.He was identified from a community alert as one of the offenders who, on Sept. 28, just after 9:30 p.m., participated in the armed robbery of a 19-year-old woman while she was waiting at the 69th Street Red Line station.The boy was placed into custody and charged accordingly, police said.",
+        "imageName": "teen-charged-in-armed-robbery"
+    },
+    {
+        "id": 2,
+        "title": "Woman charged with shooting man on CTA Red Line train to appear in court",
+        "line": "Red",
+        "station": "69th Street",
+        "locationCoordinate": {
+            "longitude": -87.6255035,
+            "latitude": 41.7688346
+        },
+        "description": "CHICAGO (CBS) — The woman accused of shooting a man during an argument on a CTA Red Line train Wednesday morning will make her first court appearance Friday. Indya Smith, 23, was charged with attempted first-degree murder, aggravated battery, and unlawful use of a weapon without a FOID card and was cited for having a weapon on the CTA. The shooting happened on the train near the Argyle stop. Chicago police said during an argument with a 33-year-old man, Smith spat on him and then shot him in his shoulder. Some passengers who saw the shooting, eventually held her down until police arrived.The victim was taken to the hospital in good condition. Police still haven't said what caused the argument or how Smith knew the man. More details about the case are expected to be released following her court appearance Friday. ",
+        "imageName": "woman-charged-with-shooting"
+    }
+
+]
