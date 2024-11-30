@@ -11,6 +11,8 @@ import FirebaseFirestore
 import CoreLocation
 import SwiftUI
 
+
+//News struct that represents the data that is stored by every created post.
 struct News: Hashable, Codable, Identifiable {
     var description: String
     var id: String // Firestore ID
@@ -31,21 +33,22 @@ struct News: Hashable, Codable, Identifiable {
 
 var Updates: [News] = []
 
-
-
 let db = Firestore.firestore()
 
 
-
+//function that loads data from the firestore database and returns an array filled with News objects.
 func loadData() async -> [News]{
     let db = Firestore.firestore()
     var tempArray : [News] = []
     
     do{
+        
         let querySnapshot = try await db.collection("updates").getDocuments()
         
+        //Documents is an array that holds the collection's documents.
         let documents = querySnapshot.documents
         
+        //Iterates through the array of documents and sets these temporary constants to the corresponding values. Ensures that no values are defaulted to nil as ?? assigns each constant to a default value.
         for document in documents {
             let data = document.data()
             let id = document.documentID
@@ -59,8 +62,9 @@ func loadData() async -> [News]{
             let tag = data["tag"] as? String ?? ""
             let title = data["title"] as? String ?? ""
             let whenHappened = data["whenHappened"] as? String ?? ""
-            let timestamp = (data["timestamp"] as? Timestamp)?.dateValue()
+            let timestamp = (data["timePosted"] as? Timestamp)?.dateValue()
 
+            //Creates a News object that is made of the constants above.
             let newsItem = News(
                 description: description,
                 id: id,
@@ -76,7 +80,7 @@ func loadData() async -> [News]{
                 longitude: longitude
                 
             )
-
+            
             tempArray.append(newsItem)
         }
         

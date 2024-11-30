@@ -25,6 +25,8 @@ struct ReportDescriptionView: View {
     let db = Firestore.firestore()
     
     
+    @State private var showAlert : Bool = false
+    @State private var alertMessage : String = ""
     
     
         var body: some View {
@@ -176,13 +178,25 @@ struct ReportDescriptionView: View {
                 Button(action: {
                     Task{
                         do{
-                            print("Selected Station: \(station)")
+                            //Ensures that the user has selected a station
+                            if(station == "" || station == "N/A" || station.isEmpty){
+                                alertMessage = "You must enter a station"
+                                showAlert = true
+                                return
+                            }
+                            
                             guard let stopCoordinates = dictOfStops[station] else {
                                 print("Error: No coordinates found for the line \(station)")
                                 return
                             }
+                            //Creates a title out of a template based on the tag and station selected
+                            if(titleInput == ""){
+                                titleInput = "\(tag) at the \"\(station)\" station on the \(line) line"
+                            }
                             
+                            //Sets each field to the variables that were altered by the user's inputs.
                             try await db.collection("updates").document().setData([
+                                "id" : db.collection("updates").document().documentID,
                                 "description" : descriptionInput,
                                 "latitude" : stopCoordinates.latitude,
                                 "line" : line,
@@ -195,10 +209,16 @@ struct ReportDescriptionView: View {
                                 "title" : titleInput,
                                 "whenHappened" : whenHappened
                                 ])
-                                print("Success")
+                            //if user posts sucessfully, an alert message appears.
+                            print("Success")
+                            alertMessage = "Your report was posted!"
+                            showAlert = true
+                                
                             }
                             catch{
                                 print("Failed")
+                                alertMessage = "There was an error, try again"
+                                showAlert = true
                         }
                     }
 
@@ -219,6 +239,15 @@ struct ReportDescriptionView: View {
                 
             }
             .frame(width: 350, height: 200)
+            //The alert that appears and displays different messages depending on specific conditions such as telling the user they need a station or that their posting was sucessful.
+            .alert(isPresented: $showAlert){
+                Alert(
+                    title: Text("Report Status"),
+                    message: Text(alertMessage),
+                    dismissButton: .default(Text("OK"))
+                    
+                )
+            }
             
                     
             }
@@ -226,8 +255,11 @@ struct ReportDescriptionView: View {
     }
 
 
+private let fakeListOfStops = ["Stop 1", "Stop 2"]
+private let fakeDictOfStops = ["Stop 1" : (-44.444, 87.555), "Stop 2" : (-55.555,77.777)]
+
 #Preview {
-    ReportDescriptionView(listOfStops: Array(StopsData.listOfBlue.keys), dictOfStops: StopsData.listOfBlue, tag: "Smoking", lineColor: Color("customPurple"), line: "Red")
+    ReportDescriptionView(listOfStops: fakeListOfStops, dictOfStops: fakeDictOfStops, tag: "Smoking", lineColor: Color("customPurple"), line: "Red")
 }
 
 //Priority buttons

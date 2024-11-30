@@ -16,15 +16,19 @@ struct UpdatesPageList: View {
     var body: some View {
         
          NavigationSplitView {
+             
             
                 List(updates) { update in
                     NavigationLink {
                         UpdatesDetails(update: update)
                     } label: {
                         UpdatesPageRow(updatespage: update)
+                            .frame(maxWidth: .infinity)
+                            .contentShape(Rectangle())
                     }
                 }
                 .navigationTitle("Updates")
+                .listStyle(.plain)
                 .onAppear{
                     Task{
                         updates = await loadData()
