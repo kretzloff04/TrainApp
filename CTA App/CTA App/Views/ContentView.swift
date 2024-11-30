@@ -24,7 +24,7 @@ struct ContentView: View {
             
             UpdatesPageList()
                 .tabItem{
-                    Label("Upates", systemImage: "Map")
+                    Label("Updates", systemImage: "Map")
                 }
             
             
