@@ -44,13 +44,9 @@ struct UpdatesDetails: View {
                         .padding(.horizontal)
                         .padding(.top, 10)
                     
-                    // Location information
-                    Text("Station: \(update.station)" )
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                    .padding(.horizontal)
+                    
                     HStack {
-                        Text("Line: \(update.line)" )
+                        Text("Station: \(update.station)" )
                         Spacer()
                         Text("Posted \(postedTimeAgo)")
                     }
@@ -58,22 +54,36 @@ struct UpdatesDetails: View {
                     .foregroundColor(.secondary)
                     .padding(.horizontal)
                 
-                    if(update.priorityLevel == 0){
-                        Text("Priority Level: N/A")
+                    Text("Line: \(update.line)" )
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                         .padding(.horizontal)
+                
+                HStack{
+                    if(update.priorityLevel == 0){
+                        Text("Priority Level: N/A")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal)
                     }
                     else{
                         Text("Priority Level: \(update.priorityLevel)")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .padding(.horizontal)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal)
                     
                     }
+                    Spacer()
+                    if(update.whenHappened != ""){
+                        Text("Happened \(update.whenHappened)")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal)
+                    }
+                }
+                
+
            
-                
-                
                     Divider()
                         .padding(.horizontal)
                     
@@ -82,9 +92,7 @@ struct UpdatesDetails: View {
                         .font(.body)
                         .padding(.horizontal)
                         .padding(.top, 5)
-
                 }
-            
             }
         
         .navigationTitle(update.title)
