@@ -86,7 +86,7 @@ struct makeReportButton: View{
                 Text(title)
                     .frame(width: 300, height: 50)
                     .foregroundColor(Color.black)
-                    .background(Color("customReportGrey"))
+                    .background(Color("textFieldColor"))
                     .cornerRadius(10)
                 
             }.padding()

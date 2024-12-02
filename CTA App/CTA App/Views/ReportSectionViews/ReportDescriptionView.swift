@@ -190,8 +190,11 @@ struct ReportDescriptionView: View {
                                 return
                             }
                             //Creates a title out of a template based on the tag and station selected
-                            if(titleInput == ""){
+                            if(titleInput == "" && (whenHappened == "" || whenHappened == "While Waiting at Stop")){
                                 titleInput = "\(tag) at the \"\(station)\" station on the \(line) line"
+                            }
+                            else if(titleInput == "" && whenHappened == "On Train"){
+                                titleInput = "\(tag) on the train near the \"\(station)\" station on the \(line) line"
                             }
                             
                             //Sets each field to the variables that were altered by the user's inputs.
