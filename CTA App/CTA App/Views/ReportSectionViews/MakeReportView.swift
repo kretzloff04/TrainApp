@@ -15,6 +15,8 @@ struct MakeReportView: View {
     var dictOfStops: [String: (latitude: Double, longitude: Double)]
     var line: String
     
+    @State private var showActionSheet = false
+    
     var body: some View {
         NavigationView{
             ZStack{
@@ -22,13 +24,21 @@ struct MakeReportView: View {
                     .resizable()
                     .frame(width: 1000, height:1500)
                     .opacity(0.15)
+                    .zIndex(0)
                 VStack{
-                    Text("Call For Help")
-                        .frame(width: 125, height: 35)
-                        .background(RoundedRectangle(cornerRadius: 10).fill(Color.black))
-                        .padding(.leading, 250)
-                        .foregroundColor(Color.white)
-                        .cornerRadius(0.5)
+                    
+                    Button(action: {
+                        showActionSheet = true
+                    }) {
+                        Text("Call For Help")
+                            .frame(width: 125, height: 35)
+                            .background(RoundedRectangle(cornerRadius: 10).fill(Color.black))
+                            .foregroundColor(Color.white)
+                            .cornerRadius(0.5)
+                    }
+                    .padding(.leading, 250)
+                    .zIndex(1)
+                    
                     
                     if stopsImage == Image("redLineStops") || stopsImage == Image("brownLineStops") || stopsImage == Image("blueLineStops") || stopsImage == Image("orangeLineStops") || stopsImage == Image("purpleLineStops"){
                         stopsImage
@@ -60,9 +70,28 @@ struct MakeReportView: View {
                 }
             }
         }
-
+        .actionSheet(isPresented: $showActionSheet) {
+            ActionSheet(
+                title: Text("Emergency Call"),
+                message: Text("Choose a number to call:"),
+                buttons: [
+                    .default(Text("Call 911")) {
+                        if let url = URL(string: "tel://911") {
+                            UIApplication.shared.open(url)
+                        }
+                    },
+                    .default(Text("Call 211")) {
+                        if let url = URL(string: "tel://211") {
+                            UIApplication.shared.open(url)
+                        }
+                    },
+                    .cancel()
+                ]
+            )
+        }
     }
 }
+
 
 #Preview {
     MakeReportView(lineColor: Color("customRed"), stopsImage: Image("purpleLineStops"), listOfStops: Array(StopsData.listOfBlue.keys), dictOfStops: StopsData.listOfRed, line: "Red")
@@ -86,10 +115,13 @@ struct makeReportButton: View{
                 Text(title)
                     .frame(width: 300, height: 50)
                     .foregroundColor(Color.black)
-                    .background(Color("textFieldColor"))
+                    .background(Color("customReportGrey"))
                     .cornerRadius(10)
                 
-            }.padding()
+            }
+            .padding(.top, 7)
+            .padding(.bottom, 7)
+            
         }
         
                 

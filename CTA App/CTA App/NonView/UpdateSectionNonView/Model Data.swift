@@ -85,8 +85,6 @@ func loadData() async -> [News]{
         }
         
 
-        
-        
     }
     catch{
         print("error")

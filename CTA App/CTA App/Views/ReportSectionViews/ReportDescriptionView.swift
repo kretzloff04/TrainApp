@@ -238,7 +238,7 @@ struct ReportDescriptionView: View {
                     }
                     
                 }
-                .padding(.top, 100)
+                .padding(.top, 50)
                 
             }
             .frame(width: 350, height: 200)
