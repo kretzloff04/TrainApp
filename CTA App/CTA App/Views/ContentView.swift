@@ -13,18 +13,18 @@ struct ContentView: View {
             
             ReportView()
                 .tabItem{
-                    Label("Report", systemImage: "Map")
+                    Label("Report", systemImage: "exclamationmark.bubble")
                 }
             
             
             F_MapView()
                 .tabItem{
-                    Label("Map", systemImage: "Map")
+                    Label("Map", systemImage: "pin")
                 }
             
             UpdatesPageList()
                 .tabItem{
-                    Label("Updates", systemImage: "Map")
+                    Label("Updates", systemImage: "arrow.up.circle")
                 }
             
             

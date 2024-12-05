@@ -9,22 +9,31 @@ import SwiftUI
 
 struct ReportView: View {
     
+    @State private var showActionSheet = false
+    
     var body: some View {
         NavigationStack{
             
             ZStack{
                 Image("ctaMap")
                     .resizable()
-                    .frame(width: 1000, height:1500)
+                    .frame(width: 1000, height: 1500)
                     .opacity(0.15)
+                    .zIndex(0)
+                
                 VStack{
-                    Text("Call For Help")
-                        .frame(width: 125, height: 35)
-                        .background(RoundedRectangle(cornerRadius: 10).fill(Color.black))
-                        .padding(.leading, 250)
-                        .foregroundColor(Color.white)
-                        .cornerRadius(0.5)
-                        
+                    Button(action: {
+                        showActionSheet = true
+                    }) {
+                        Text("Call For Help")
+                            .frame(width: 125, height: 35)
+                            .background(RoundedRectangle(cornerRadius: 10).fill(Color.black))
+                            .foregroundColor(Color.white)
+                            .cornerRadius(0.5)
+                    }
+                    .padding(.leading, 250)
+                    .zIndex(1)
+                    
                     Text("Select a Line")
                         .font(.system(size: 30))
                         .bold()
@@ -43,7 +52,25 @@ struct ReportView: View {
                 }
                 .padding(.bottom, 80)
             }
-            
+            .actionSheet(isPresented: $showActionSheet) {
+                ActionSheet(
+                    title: Text("Emergency Call"),
+                    message: Text("Choose a number to call:"),
+                    buttons: [
+                        .default(Text("Call 911")) {
+                            if let url = URL(string: "tel://911") {
+                                UIApplication.shared.open(url)
+                            }
+                        },
+                        .default(Text("Call 211")) {
+                            if let url = URL(string: "tel://211") {
+                                UIApplication.shared.open(url)
+                            }
+                        },
+                        .cancel()
+                    ]
+                )
+            }
         }
     }
 }
