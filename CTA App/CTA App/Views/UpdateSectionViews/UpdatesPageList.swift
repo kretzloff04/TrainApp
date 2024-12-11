@@ -22,7 +22,11 @@ struct UpdatesPageList: View {
             (selectedTags.isEmpty || selectedTags.contains(update.tag)) &&
             (selectedStations.isEmpty || selectedStations.contains(update.station))
         }
+        .sorted {
+            ($0.timePosted ?? Date.distantPast) > ($1.timePosted ?? Date.distantPast)
+        }
     }
+
     
     var availableLines: [String] {
         Set(updates.map { $0.line }).sorted()
@@ -88,7 +92,7 @@ struct UpdatesPageList: View {
                                  }
                                  else{
                                      selectedTags.insert(tag)
-                                 }
+                                }
                              }label:{
                                  HStack{
                                      Text(tag)
@@ -145,6 +149,9 @@ struct UpdatesPageList: View {
                              .contentShape(Rectangle())
                      }
                  }
+                 .refreshable{
+                     await refreshData()
+                 }
                  .navigationTitle("Updates")
                  .listStyle(.plain)
                  .onAppear{
@@ -161,6 +168,10 @@ struct UpdatesPageList: View {
         } detail: {
             Text("Select an update")
         }
+    }
+    
+    func refreshData() async{
+        updates = await loadData()
     }
 }
 

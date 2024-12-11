@@ -40,6 +40,7 @@ let db = Firestore.firestore()
 func loadData() async -> [News]{
     let db = Firestore.firestore()
     var tempArray : [News] = []
+    let currentDate = Date()
     
     do{
         
@@ -64,6 +65,11 @@ func loadData() async -> [News]{
             let whenHappened = data["whenHappened"] as? String ?? ""
             let timestamp = (data["timePosted"] as? Timestamp)?.dateValue()
 
+            if let timestamp = timestamp, currentDate.timeIntervalSince(timestamp) > 14 * 24 * 60 * 60{
+                try await db.collection("updates").document(id).delete()
+                continue
+            }
+            
             //Creates a News object that is made of the constants above.
             let newsItem = News(
                 description: description,

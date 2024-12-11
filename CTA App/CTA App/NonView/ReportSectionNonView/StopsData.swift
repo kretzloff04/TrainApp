@@ -44,6 +44,7 @@ struct StopsData{
         "95th/Dan Ryan" : (41.72145, -87.62437)
     ]
     
+  
     
     static let listOfBrown: [String: (latitude: Double, longitude: Double)] = [
         "Kimball": (41.96773, -87.71297),
