@@ -17,6 +17,33 @@ struct MakeReportView: View {
     
     @State private var showActionSheet = false
     
+    private var largePicWidth: CGFloat{
+        if iPhoneModel.getIPhoneModelByScreen() == "iPhone 12 Mini or iPhone 13 Mini"{
+            return 225
+        }
+        else{
+            return 250
+        }
+    }
+    
+    private var largePicHeight: CGFloat{
+        if iPhoneModel.getIPhoneModelByScreen() == "iPhone 12 Mini or iPhone 13 Mini"{
+            return 300
+        }
+        else{
+            return 325
+        }
+    }
+    
+    private var paddingForHelp: CGFloat{
+        if iPhoneModel.getIPhoneModelByScreen() == "iPhone 12 Mini or iPhone 13 Mini"{
+            return 225
+        }
+        else{
+            return 250
+        }
+    }
+    
     var body: some View {
         NavigationView{
             ZStack{
@@ -36,7 +63,8 @@ struct MakeReportView: View {
                             .foregroundColor(Color.white)
                             .cornerRadius(0.5)
                     }
-                    .padding(.leading, 250)
+                    .padding(.leading, paddingForHelp)
+                    .padding(.bottom, 20)
                     .zIndex(1)
                     
                     
@@ -44,7 +72,7 @@ struct MakeReportView: View {
                         stopsImage
                             .resizable()
                             .scaledToFill()
-                            .frame(width:275, height: 350)
+                            .frame(width: largePicWidth, height: largePicHeight)
                             .padding(.bottom, 10)
                     }
                     else if stopsImage == Image("greenLineStops") || stopsImage == Image("pinkLineStops"){
@@ -60,6 +88,7 @@ struct MakeReportView: View {
                             .frame(width: 150, height: 200)
                         
                     }
+                        
                     
                     
                     makeReportButton(title: "Report Smoking", lineColor: lineColor, listOfStops: listOfStops, dictOfStops: dictOfStops, line: line)
@@ -119,8 +148,8 @@ struct makeReportButton: View{
                     .cornerRadius(10)
                 
             }
-            .padding(.top, 7)
-            .padding(.bottom, 7)
+            .padding(.top, 5)
+            .padding(.bottom, 5)
             
         }
         

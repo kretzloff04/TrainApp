@@ -24,9 +24,54 @@ struct ReportDescriptionView: View {
     var line: String
     let db = Firestore.firestore()
     
-    
     @State private var showAlert : Bool = false
     @State private var alertMessage : String = ""
+    
+    private var titleWidth: CGFloat{
+        if (iPhoneModel.getIPhoneModelByScreen() == "iPhone 12 Mini or iPhone 13 Mini"){
+            return 325
+        }
+        else{
+            return 350
+        }
+    }
+    
+    private var paddingButtons: CGFloat{
+        if (iPhoneModel.getIPhoneModelByScreen() == "iPhone 12 Mini or iPhone 13 Mini"){
+            return 5
+        }
+        else{
+            return 20
+        }
+    
+    }
+    
+    private var paddingDots: CGFloat{
+        if (iPhoneModel.getIPhoneModelByScreen() == "iPhone 12 Mini or iPhone 13 Mini"){
+            return 305
+        }
+        else{
+            return 325
+        }
+    }
+    
+    private var priorityPadding: CGFloat{
+        if (iPhoneModel.getIPhoneModelByScreen() == "iPhone 12 Mini or iPhone 13 Mini"){
+            return 20
+        }
+        else{
+            return 50
+        }
+    }
+    
+    private var fontSize: CGFloat{
+        if (iPhoneModel.getIPhoneModelByScreen() == "iPhone 12 Mini or iPhone 13 Mini"){
+            return 20
+        }
+        else{
+            return 25
+        }
+    }
     
     
         var body: some View {
@@ -39,49 +84,56 @@ struct ReportDescriptionView: View {
             //Overall VStack that organizes the vertical component of the entire page.
             VStack(spacing: -20){
                 Text("Title")
-                    .font(.system(size: 25))
+                    .font(.system(size: fontSize))
                 
                 //The title TextField. A ZStack is used to display the border.
                 ZStack{
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(Color.black, lineWidth: 1)
-                        .frame(width: 350, height: 34)
+                        .frame(width: titleWidth, height: 34)
                     
                     TextField("Title", text: $titleInput)
                         .textFieldStyle(.roundedBorder)
                         .colorMultiply(Color("textFieldColor"))
                         .cornerRadius(10)
-                        .frame(width: 350, height: 100)
+                        .frame(width: titleWidth, height: 100)
                 }
                 
                 Text("Description")
                     .padding(.bottom, 35)
-                    .font(.system(size: 25))
+                    .font(.system(size: fontSize))
                 
                 ZStack{
                     
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(Color.black, lineWidth: 1)
-                        .frame(width: 350, height: 100)
+                        .frame(width: titleWidth, height: 100)
                     
                     TextEditor(text: $descriptionInput)
                         .colorMultiply(Color("textFieldColor"))
                         .cornerRadius(10)
-                        .frame(width: 350, height: 100)
+                        .frame(width: titleWidth, height: 100)
                     
                     if descriptionInput == ""{
-                        Text("Description")
-                            .padding(.trailing, 325)
+                        Text("...")
+                            .padding(.trailing, paddingDots)
                             .padding(.bottom, 75)
                     }
                 }
 
                 HStack(alignment: .firstTextBaseline){
                     VStack{
-                        Text("Station")
-                            .padding(.top,50)
-                            .font(.system(size:25))
-                            .padding(.trailing, 20)
+                        HStack(spacing: 2) {
+                            Text("Station")
+                                .font(.system(size: fontSize))
+                                .padding(.top, 50)
+
+                            Text("*")
+                                .font(.system(size: fontSize))
+                                .foregroundColor(.red)
+                                .padding(.top, 50)
+                        }
+                        .padding(.trailing, paddingButtons)
                         
                         ZStack{
                             RoundedRectangle(cornerRadius: 10)
@@ -93,19 +145,23 @@ struct ReportDescriptionView: View {
                                 .background(Color("textFieldColor"))
                                 .cornerRadius(10)
                         }
-                        .padding(.trailing, 20)
+                        .padding(.trailing, paddingButtons)
                     }
                     
                     VStack{
+                        
                         Text("Tag")
-                            .font(.system(size: 25))
-                            .padding(.bottom, 10)
-                            .padding(.leading, 20)
+                            .font(.system(size: fontSize))
+                            .padding(.top, 50)
+//                            .padding(.bottom, 10)
+//                            .padding(.leading, 20)
+//                            
+                        
                         ZStack{
                             RoundedRectangle(cornerRadius: 10)
                                 .stroke(Color.black, lineWidth: 1)
                                 .frame(width: 160, height: 50)
-                                .padding(.leading, 20)
+                                .padding(.leading, paddingButtons)
                             Picker("Select a tag", selection: $tag){
                                 Text("Smoking")
                                     .tag("Smoking")
@@ -129,7 +185,7 @@ struct ReportDescriptionView: View {
                             .accentColor(.black)
                             .background(Color("textFieldColor"))
                             .cornerRadius(10)
-                            .padding(.leading, 20)
+                            .padding(.leading, paddingButtons)
                             .font(.system(size: 1))
                          
                         }
@@ -140,7 +196,7 @@ struct ReportDescriptionView: View {
                 
                 VStack{
                     Text("When Did This Happen?")
-                        .font(.system(size: 25))
+                        .font(.system(size: fontSize))
                     
                     ZStack{
                         RoundedRectangle(cornerRadius: 10)
@@ -163,8 +219,8 @@ struct ReportDescriptionView: View {
                 .padding(.top, 30)
                 
                 Text("Priority Level")
-                    .padding(.top, 50)
-                    .font(.system(size: 30))
+                    .padding(.top, priorityPadding)
+                    .font(.system(size: fontSize))
                     .padding(.bottom, 10)
                 
                 HStack{

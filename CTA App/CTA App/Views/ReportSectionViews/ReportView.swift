@@ -11,7 +11,37 @@ struct ReportView: View {
     
     @State private var showActionSheet = false
     
+    private var paddingBottom: CGFloat{
+        if iPhoneModel.getIPhoneModelByScreen() == "iPhone 12 Mini or iPhone 13 Mini" {
+            return 40
+        } else {
+            return 80
+        }
+    }
+    
+    private var paddingBetweenButtons: CGFloat{
+        if iPhoneModel.getIPhoneModelByScreen() == "iPhone 12 Mini or iPhone 13 Mini"{
+            return 10
+        }
+        else{
+            return 15
+        }
+    }
+    
+    private var paddingForHelp: CGFloat{
+        if iPhoneModel.getIPhoneModelByScreen() == "iPhone 12 Mini or iPhone 13 Mini"{
+            return 225
+        }
+        else{
+            return 250
+        }
+    }
+    
+    
+    
+    
     var body: some View {
+        
         NavigationStack{
             
             ZStack{
@@ -22,6 +52,7 @@ struct ReportView: View {
                     .zIndex(0)
                 
                 VStack{
+                    
                     Button(action: {
                         showActionSheet = true
                     }) {
@@ -31,26 +62,33 @@ struct ReportView: View {
                             .foregroundColor(Color.white)
                             .cornerRadius(0.5)
                     }
-                    .padding(.leading, 250)
+                    .padding(.leading, paddingForHelp)
                     .zIndex(1)
                     
                     Text("Select a Line")
                         .font(.system(size: 30))
                         .bold()
-                    reportBtn(lineColor: "customRed", imageString: "redLineStops", title: "Red Line", listOfStops: Array(StopsData.listOfRed.keys), dictOfStops: StopsData.listOfRed, line: "Red")
-                        .padding()
-                    reportBtn(lineColor: "customBlue", imageString: "blueLineStops", title: "Blue Line", listOfStops: Array(StopsData.listOfBlue.keys), dictOfStops: StopsData.listOfBlue, line: "Blue")
-                    reportBtn(lineColor: "customBrown", imageString: "brownLineStops", title: "Brown Line", listOfStops: Array(StopsData.listOfBrown.keys), dictOfStops: StopsData.listOfBrown, line: "Brown")
-                        .padding()
-                    reportBtn(lineColor: "customGreen", imageString: "greenLineStops", title: "Green Line", listOfStops: Array(StopsData.listOfGreen.keys), dictOfStops: StopsData.listOfGreen, line: "Green")
-                    reportBtn(lineColor: "customOrange", imageString: "orangeLineStops", title: "Orange Line", listOfStops: Array(StopsData.listOfOrange.keys), dictOfStops: StopsData.listOfOrange, line: "Orange")
-                        .padding()
-                    reportBtn(lineColor: "customPink", imageString: "pinkLineStops", title: "Pink Line", listOfStops: Array(StopsData.listOfPink.keys), dictOfStops: StopsData.listOfPink, line: "Pink")
-                    reportBtn(lineColor: "customPurple", imageString: "purpleLineStops", title: "Purple Line", listOfStops: Array(StopsData.listOfPurple.keys), dictOfStops: StopsData.listOfPurple, line: "Purple")
-                        .padding()
-                    reportBtn(lineColor: "customYellow", imageString: "yellowLineStops", title: "Yellow Line", listOfStops: Array(StopsData.listOfYellow.keys), dictOfStops: StopsData.listOfYellow, line: "Yellow")
+                    
+                    
+                    
+                    reportBtn(lineColor: "customRed", imageString: "redLineStops", title: "Red Line", listOfStops: Array(StopsData.listOfRed.keys).sorted(), dictOfStops: StopsData.listOfRed, line: "Red")
+                        .padding(paddingBetweenButtons)
+                    
+                    reportBtn(lineColor: "customBlue", imageString: "blueLineStops", title: "Blue Line", listOfStops: Array(StopsData.listOfBlue.keys).sorted(), dictOfStops: StopsData.listOfBlue, line: "Blue")
+                    reportBtn(lineColor: "customBrown", imageString: "brownLineStops", title: "Brown Line", listOfStops: Array(StopsData.listOfBrown.keys).sorted(), dictOfStops: StopsData.listOfBrown, line: "Brown")
+                        .padding(paddingBetweenButtons)
+                    
+                    reportBtn(lineColor: "customGreen", imageString: "greenLineStops", title: "Green Line", listOfStops: Array(StopsData.listOfGreen.keys).sorted(), dictOfStops: StopsData.listOfGreen, line: "Green")
+                    reportBtn(lineColor: "customOrange", imageString: "orangeLineStops", title: "Orange Line", listOfStops: Array(StopsData.listOfOrange.keys).sorted(), dictOfStops: StopsData.listOfOrange, line: "Orange")
+                        .padding(paddingBetweenButtons)
+                    
+                    reportBtn(lineColor: "customPink", imageString: "pinkLineStops", title: "Pink Line", listOfStops: Array(StopsData.listOfPink.keys).sorted(), dictOfStops: StopsData.listOfPink, line: "Pink")
+                    reportBtn(lineColor: "customPurple", imageString: "purpleLineStops", title: "Purple Line", listOfStops: Array(StopsData.listOfPurple.keys).sorted(), dictOfStops: StopsData.listOfPurple, line: "Purple")
+                        .padding(paddingBetweenButtons)
+                    
+                    reportBtn(lineColor: "customYellow", imageString: "yellowLineStops", title: "Yellow Line", listOfStops: Array(StopsData.listOfYellow.keys).sorted(), dictOfStops: StopsData.listOfYellow, line: "Yellow")
                 }
-                .padding(.bottom, 80)
+                .padding(.bottom, paddingBottom)
             }
             .actionSheet(isPresented: $showActionSheet) {
                 ActionSheet(
