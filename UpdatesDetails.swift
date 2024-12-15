@@ -6,21 +6,39 @@
 //
 
 import SwiftUI
+import Firebase
+import FirebaseFirestore
+
+
 
 struct UpdatesDetails: View {
+    var update: News
+    let db = Firestore.firestore()
     @State private var hasFlagged = false
     @State private var flagCount = 0
     @State private var showConfirmationDialog = false
-
     
-    var update: News
+    private var postedTimeAgo: String{
+        let format = RelativeDateTimeFormatter()
+        format.unitsStyle = .abbreviated
+        
+        if let timePosted = update.timePosted{
+            return format.localizedString(for: timePosted, relativeTo: Date())
+        }
+        else{
+            return "Unknown Time"
+        }
+        
+    }
     
     var body: some View {
         ScrollView {
+            
             MapPreviewUpdate(update: update)
                 .frame(height: 300)
-                .cornerRadius(22)
+                .cornerRadius(10)
                 .padding(.horizontal)
+            
             
             VStack(alignment: .leading, spacing: 10) {
                 // Title of the update
@@ -29,15 +47,45 @@ struct UpdatesDetails: View {
                     .padding(.horizontal)
                     .padding(.top, 10)
                 
-                // Location information
+                
                 HStack {
                     Text("Station: \(update.station)" )
                     Spacer()
-                    Text("Line: \(update.line)" )
+                    Text("Posted \(postedTimeAgo)")
                 }
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .padding(.horizontal)
+                
+                Text("Line: \(update.line)" )
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .padding(.horizontal)
+                
+                HStack{
+                    if(update.priorityLevel == 0){
+                        Text("Priority Level: N/A")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal)
+                    }
+                    else{
+                        Text("Priority Level: \(update.priorityLevel)")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal)
+                        
+                    }
+                    Spacer()
+                    if(update.whenHappened != ""){
+                        Text("Happened \(update.whenHappened)")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal)
+                    }
+                }
+                
+                
                 
                 Divider()
                     .padding(.horizontal)
@@ -48,10 +96,6 @@ struct UpdatesDetails: View {
                     .padding(.horizontal)
                     .padding(.top, 5)
                 
-                Divider()
-                    .padding(.horizontal)
-                
-                // Flagging Button
                 Button(action: {
                     showConfirmationDialog = true
                 }) {
@@ -70,12 +114,10 @@ struct UpdatesDetails: View {
                     Button("Cancel", role: .cancel) {}
                 }
             }
+            .navigationTitle(update.title)
+            .navigationBarTitleDisplayMode(.inline)
         }
-        .navigationTitle(update.title)
-        .navigationBarTitleDisplayMode(.inline)
-        
     }
-    
     private func checkFlagCount() {
         if flagCount >= 5 {
             print("This update needs to be reviewed!")
@@ -87,8 +129,11 @@ struct UpdatesDetails: View {
         if flagCount < 0 { flagCount = 0 } // Safety check
     }
 }
+    
+private let mockUpdate = News(description: "Test Update 2", id: "2", line: "Blue", numReports: 0, priorityLevel: 2, station: "Station 2", tag: "Accident", title: "Test Title 2", whenHappened: "2024-11-29", timePosted: Date(), latitude: 41.8837, longitude: -87.6298)
+
 
 #Preview {
-    UpdatesDetails(update: Updates[0])
+    UpdatesDetails(update: mockUpdate)
 }
 
