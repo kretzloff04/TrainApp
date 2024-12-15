@@ -3,7 +3,6 @@
 //
 //  Created by 11 GO Participant on 10/31/24.
 //
-
 import SwiftUI
 import SwiftData
 import MapKit
@@ -25,10 +24,10 @@ struct F_MapView: View {
 
     @StateObject private var locationManager = LocationManager()
     @State private var updates: [News] = []
-    
+
 
     let ctaRoutes: [RouteModel] = RouteModel.allRoutes()
-    
+
     let lineColors: [String: Color] = [
         "Red": .red,
         "Blue": .blue,
@@ -39,28 +38,28 @@ struct F_MapView: View {
         "Pink": .pink,
         "Yellow": .yellow
     ]
-    
+
 
     var body: some View {
         ZStack {
             Map(position: $cameraPosition, selection: $mapSelection) {
                 UserAnnotation()
-                
+
                 ForEach(updates) { update in
                     let markerColor = lineColors[update.line] ?? .gray
-                    
+
                     Marker(update.title, coordinate: CLLocationCoordinate2D(latitude: update.latitude, longitude: update.longitude))
                         .tint(markerColor)
                 }
-            
-                
+
+
                 // displaying search results ~
                 ForEach(results, id: \.self) { item in
                     let placemark = item.placemark
                     Marker(placemark.name ?? "", coordinate: placemark.coordinate)
                         .tint(Color.gray)
                 }
-                
+
                 // displaying route polyline if route is selected ~
                 if let route {
                     MapPolyline(route.polyline)
@@ -73,13 +72,14 @@ struct F_MapView: View {
                     updates = await loadData() // Fetch updates from Firestore
                 }
             }
-            
-            
+
+
             // emergency report button ~
             VStack {
                 Spacer()
                 HStack {
                     Spacer()
+                    
                     Button(action: {
                         showReportView = true // trigger ~ navigation to ReportView
                     }) {
@@ -94,31 +94,37 @@ struct F_MapView: View {
             }
             .sheet(isPresented: $showReportView) {
                 ReportView() // shows ReportView in hurry !
-                            .presentationDragIndicator(.visible) // drag view ~
-                            .presentationCornerRadius(20)
+                    .presentationDragIndicator(.visible) // drag view ~
+                    .presentationCornerRadius(20)
             }
-            
+
             // search bar ~
             // search text field ~
             .overlay(alignment: .top) {
-                TextField("Search for a location...", text: $searchText)
-                    .font(.subheadline)
-                    .padding(12)
-                    .foregroundColor(Color.black)
-                    .background(Color.white.opacity(0.1))
-                    .background(.white)
-                    .cornerRadius(10)
-                    .padding()
-                    .shadow(radius: 10)
-            }
-            .onSubmit(of: .text) {
-                Task { await searchPlaces() }
-            }
-            .onChange(of: getDirections, { oldValue, newValue in
-                if newValue {
-                    fetchRoute()
+                HStack {
+                    TextField("Search for a location...", text: $searchText)
+                        .font(.subheadline)
+                        .padding(12)
+                        .foregroundColor(Color.black)
+                        .background(Color.white.opacity(0.1))
+                        .background(.white)
+                        .cornerRadius(10)
+                        .padding(.leading, 8)
+                        .padding(.trailing, 45)
+                        .shadow(radius: 10)
+
+                    Spacer()
                 }
-            })
+                .onSubmit(of: .text) {
+                    Task { await searchPlaces() }
+                }
+                .onChange(of: getDirections, { oldValue, newValue in
+                    if newValue {
+                        fetchRoute()
+                    }
+                })
+            }
+            .padding(.top, 5)
         }
         .onChange(of: mapSelection, { oldValue, newValue in
             showDetails = newValue != nil
@@ -131,11 +137,15 @@ struct F_MapView: View {
         }
         .mapControls {
             MapCompass()
-                //.mapControlVisibility(.visible)
-                // MapPitchToggle()
+                .padding(.top, 56)
             MapUserLocationButton()
+                //.mapControlVisibility(.visible)
+            MapPitchToggle()
                 .mapStyle(MapStyle.standard)
+            
         }
+
+
     }
 }
 
@@ -146,27 +156,27 @@ extension F_MapView {
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = searchText
         request.region = .userRegion
-        
+
         let results = try? await MKLocalSearch(request: request).start()
         self.results = results?.mapItems ?? []
     }
-    
+
     // fetching routes ~
     func fetchRoute() {
         if let mapSelection {
             let request = MKDirections.Request()
             request.source = MKMapItem(placemark: .init(coordinate: locationManager.userLocation))
             request.destination = mapSelection
-            
+
             Task {
                 let result = try? await MKDirections(request: request).calculate()
                 route = result?.routes.first
                 routeDestination = mapSelection
-                
+
                 withAnimation(.snappy) {
                     routeDisplaying = true
                     showDetails = false
-                    
+
                     if let rect = route?.polyline.boundingMapRect, routeDisplaying {
                         cameraPosition = .rect(rect)
                     }
@@ -174,7 +184,7 @@ extension F_MapView {
             }
         }
     }
-    
+
     func getRoute() {
         if let mapSelection {
             let request = MKDirections.Request()
@@ -202,25 +212,25 @@ extension F_MapView {
 // Location Manager to fetch the user's current location
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private var locationManager = CLLocationManager()
-    
+
     @Published var userLocation: CLLocationCoordinate2D = .init(latitude: 41.881832, longitude: -87.623177)
-    
+
     override init() {
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
     }
-    
+
     func requestLocation() {
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
     }
-    
+
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let newLocation = locations.first else { return }
         userLocation = newLocation.coordinate
     }
-    
+
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Failed to find user's location: \(error.localizedDescription)")
     }
