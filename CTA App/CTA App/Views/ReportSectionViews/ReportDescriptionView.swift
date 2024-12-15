@@ -268,7 +268,13 @@ struct ReportDescriptionView: View {
                                 "title" : titleInput,
                                 "whenHappened" : whenHappened
                                 ])
-                            //if user posts sucessfully, an alert message appears.
+                            if await (getStat(line: line, tag: tag, station: station) == nil){
+                                await createStat(line: line, tag: tag, station: station)
+                            }
+                            else{
+                                await incrementStat(line: line, tag: tag, station: station)
+                            }
+                            
                             print("Success")
                             alertMessage = "Your report was posted!"
                             showAlert = true

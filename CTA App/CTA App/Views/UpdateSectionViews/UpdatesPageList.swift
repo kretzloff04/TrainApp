@@ -44,6 +44,9 @@ struct UpdatesPageList: View {
         
          NavigationSplitView {
              VStack {
+                 NavigationLink(destination: StatsView()){
+                     Text("Click Here To View Statistics")
+                 }
                  HStack{
                      Menu{
                          Button("Select All Lines"){

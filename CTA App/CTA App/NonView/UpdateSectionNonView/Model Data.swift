@@ -100,9 +100,183 @@ func loadData() async -> [News]{
     
 }
 
+
+
+
+
+
+func createStat(line: String, tag: String, station: String) async{
+    let statRef = db.collection("stats").document()
+    let docID = statRef.documentID
     
+    let data: [String: Any] = [
+        "id" : docID,
+        "line" : line,
+        "tag" : tag,
+        "station" : station,
+        "totalReports" : 1
+    ]
+    
+    do{
+        try await statRef.setData(data)
+    }
+    catch{
+        print("Cannot add stat data to database")
+    }
+}
+
+func getStat(line: String, tag: String, station: String) async -> DocumentSnapshot?{
+    let query = db.collection("stats")
+        .whereField("line", isEqualTo: line)
+        .whereField("tag", isEqualTo: tag)
+        .whereField("station", isEqualTo: station)
+    
+    do{
+        let querySnapshot = try await query.getDocuments()
+        return querySnapshot.documents.first
+    }
+    catch{
+        print("Could not retrieve statistic")
+        return nil
+    }
+}
+
+func incrementStat(line: String, tag: String, station: String) async{
+    if let snapshot = await getStat(line: line, tag: tag, station: station){
+        let statRef = snapshot.reference
+        
+        do{
+            try await statRef.updateData([
+                "totalReports": FieldValue.increment(Int64(1))
+            ])
+        }
+        catch{
+            print("Could not increment")
+        }
+    }
+    else{
+        print("Document was not retrieved")
+    }
+}
+
+func numReportsPerLine() async -> [String : Int]{
+    let db = Firestore.firestore()
+    var reportsPerLine: [String: Int] = [:]
+    
+    do{
+        let querySnapshot = try await db.collection("stats").getDocuments()
+        
+        for document in querySnapshot.documents{
+            let data = document.data()
+            
+            let line = data["line"] as? String ?? ""
+            let totalReports = data["totalReports"] as? Int ?? 0
+            
+            reportsPerLine[line, default: 0] += totalReports
+        }
+    }
+    catch{
+        print("Could not retrieve stats data (numReportsPerLine")
+    }
+    return reportsPerLine
+}
+
+func numReportOneLine(input: String) async -> [String : Int]{
+    let db = Firestore.firestore()
+    var reportsPerInput: [String: Int] = [:]
+    
+    do{
+        let querySnapshot = try await db.collection("stats").whereField("line", isEqualTo: input).getDocuments()
+        for document in querySnapshot.documents{
+            let data = document.data()
+            
+            
+            let key = data["station"] as? String ?? ""
+            let totalReports = data["totalReports"] as? Int ?? 0
+            
+            reportsPerInput[key, default: 0] += totalReports
+            
+        }
+    }
+    catch{
+        print("Could not retrieve numReportOneLine")
+    }
+    return reportsPerInput
+}
+
+func totalReportsAllTime() async -> Int{
+    let db = Firestore.firestore()
+    var overallReports = 0
+    do{
+        let querySnapshot = try await db.collection("stats").getDocuments()
+        for document in querySnapshot.documents{
+            let data = document.data()
+            
+            if let totalReports = data["totalReports"] as? Int{
+                overallReports = overallReports + totalReports
+            }
+            else{
+                print("Error, wrong type")
+            }
+        }
+    }
+    catch{
+        print("Could not retrieve stats data (totalReportsAllTime)")
+    }
+    return overallReports
+}
+
+
+struct LineReport: Identifiable{
+    let id = UUID()
+    let line: String
+    let totalReports: Int
+}
+
+func transformReportsData(_ reports: [String: Int]) -> [LineReport] {
+    reports.map { LineReport(line: $0.key, totalReports: $0.value) }
+}
+
+
+func lineColor(line: String) -> Color{
+    if(line == "Red"){
+        return Color("customRed")
+    }
+    else if(line == "Blue"){
+        return Color("customBlue")
+    }
+    else if(line == "Brown"){
+        return Color("customBrown")
+    }
+    else if(line == "Purple"){
+        return Color("customPurple")
+    }
+    else if(line == "Yellow"){
+        return Color("customYellow")
+    }
+    else if(line == "Pink"){
+        return Color("customPink")
+    }
+    else if(line == "Green"){
+        return Color("customGreen")
+    }
+    else{
+        return Color("customOrange")
+    }
+}
 
 
 
 
 
+
+extension Color{
+    static var random: Color{
+        Color(
+            red: Double.random(in: 0...1),
+            green: Double.random(in: 0...1),
+            blue: Double.random(in: 0...1)
+        )
+    }
+    
+}
